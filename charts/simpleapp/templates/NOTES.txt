@@ -1,0 +1,4 @@
+1. Get the application URL by running these commands:
+{{- if .Values.route.enabled }}
+http://{{ .Values.route.hostName }}
+{{- end }}

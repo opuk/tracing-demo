@@ -1,0 +1,15 @@
+{{- if .Values.route.enabled -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "simpleapp.fullname" . }}-webapp
+spec:
+  host: {{ .Values.route.hostName }}
+  port:
+    targetPort: tcp-80
+  to:
+    kind: Service
+    name: simplewebapp
+    weight: 100
+  wildcardPolicy: None
+{{- end }}

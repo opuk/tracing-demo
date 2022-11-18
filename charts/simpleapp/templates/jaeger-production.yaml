@@ -1,0 +1,93 @@
+{{- if eq .Values.tracing.mode "production" -}}
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  labels:
+    jaegertracing.io/operated-by: openshift-distributed-tracing.jaeger-operator
+  name: jaeger-production
+  namespace: {{ .Values.tracing.namespace }}
+spec:
+  agent:
+    config: {}
+    options: {}
+    resources: {}
+  allInOne:
+    config: {}
+    metricsStorage: {}
+    options: {}
+    resources: {}
+  collector:
+    config: {}
+    kafkaSecretName: ""
+    options: {}
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 512Mi
+      limits:
+        cpu: 0.5
+        memory: 512Mi
+  ingester:
+    config: {}
+    kafkaSecretName: ""
+    options: {}
+    resources: {}
+  ingress:
+    openshift:
+      sar: '{"namespace": "{{ .Values.tracing.namespace }}", "resource": "pods", "verb": "get"}'
+    options: {}
+    resources: {}
+    security: oauth-proxy
+  query:
+    metricsStorage: {}
+    options: {}
+    resources: {}
+  resources: {}
+#  sampling:
+#    options:
+#      default_strategy:
+#        type: probabilistic
+#        param: 0.001
+  storage:
+    cassandraCreateSchema: {}
+    dependencies:
+      resources: {}
+      schedule: 55 23 * * *
+    elasticsearch:
+      name: elasticsearch
+      nodeCount: 3
+      redundancyPolicy: SingleRedundancy
+      resources:
+        limits:
+          memory: 2Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
+      storage:
+        storageClassName: {{ .Values.tracing.storageClass }}
+        size: {{ .Values.tracing.storageSize }}
+    esIndexCleaner:
+      enabled: true
+      numberOfDays: 7
+      resources: {}
+      schedule: 55 23 * * *
+    esRollover:
+      resources: {}
+      schedule: '*/30 * * * *'
+    grpcPlugin: {}
+    options: {}
+    type: elasticsearch
+  strategy: production
+  ui:
+    options:
+      dependencies:
+        menuEnabled: false
+      menu:
+      - items:
+        - label: Documentation
+          url: https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html/distributed_tracing/index
+        label: About
+      - anchorTarget: _self
+        label: Log Out
+        url: /oauth/sign_in
+{{- end }}

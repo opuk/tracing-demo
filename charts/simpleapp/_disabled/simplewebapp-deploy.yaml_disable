@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplewebapp-v1
+  #annotations:
+  #  sidecar.jaegertracing.io/inject: "true"
+spec:
+  progressDeadlineSeconds: 600
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: simplewebapp
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: simplewebapp
+        sidecar.istio.io/inject: "true"
+        version: v1
+    spec:
+      containers:
+      - image: {{ .Values.webapp.image }}
+        imagePullPolicy: Always
+        name: webapp
+        env:
+          - name: TRACE_COLLECTOR
+            value: "{{ .Values.traceCollector }}"
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      serviceAccountName: simplewebapp

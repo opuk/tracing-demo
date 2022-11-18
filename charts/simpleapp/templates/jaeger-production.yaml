@@ -22,10 +22,10 @@ spec:
     options: {}
     resources:
       requests:
-        cpu: 0.5
+        cpu: 500m
         memory: 512Mi
       limits:
-        cpu: 0.5
+        cpu: 500m
         memory: 512Mi
   ingester:
     config: {}

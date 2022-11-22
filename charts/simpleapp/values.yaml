@@ -10,20 +10,20 @@ webapp:
 api:
   image: quay.io/opuk/simpleapi:v0.0.3
 
-traceCollector: "http://jaeger-all-in-one-inmemory-collector-headless:14268/api/traces"
-#traceCollector: "http://jaeger-production-collector-headless:14268/api/traces"
+#traceCollector: "http://jaeger-all-in-one-inmemory-collector-headless:14268/api/traces"
+traceCollector: "http://jaeger-production-collector-headless:14268/api/traces"
 
 route:
-  hostName: webapp-traceme.apps.prod.lab.kupo.se
+  hostName: webapp-traceme.apps.labcluster.grzvg.gcp.redhatworkshops.io
   enabled: true
 
 tracing:
   #mode: none
-  mode: test
-  #mode: production
+  #mode: test
+  mode: production
   namespace: app01
-  #storageClass: standard
-  #storageSize: 20Gi
+  storageClass: standard
+  storageSize: 20Gi
 
 imagePullSecrets: []
 nameOverride: ""

@@ -21,7 +21,7 @@ tracing:
   #mode: none
   mode: test
   #mode: production
-  #namespace: app01
+  namespace: app01
   #storageClass: standard
   #storageSize: 20Gi
 
